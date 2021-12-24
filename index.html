@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="./css/index.css">
+
+    <title>Tiger's Work Stuff</title>
+
+
+    
+
+</head>
+
+<body>
+    <div class = "row">
+        <h1>Trailer Weight Calculator</h1>
+        <form class="column">
+            <h3>Inputs</h3>
+            <label for="F1">F<sub>1</sub>:</label>
+            <input type="number" id="F1"><br><br>
+            <label for="F2">F<sub>2</sub>:</label>
+            <input type="number" id="F2"><br><br>
+            <label for="D1">D<sub>1</sub>:</label>
+            <input type="number" id="D1"><br><br>
+            <label for="D2">D<sub>2</sub>:</label>
+            <input type="number" id="D2"><br><br>
+            <!-- <input type="submit" value="Submit"> -->
+            <h3>Trailer Lengths</h3>
+            <label for="Xoal">X<sub>oal</sub>:</label>
+            <input type="number" id="Xoal"><br><br>
+            <label for="Xw1">X<sub>w1</sub>:</label>
+            <input type="number" id="Xw1"><br><br>
+            <label for="Xw2">X<sub>w2</sub>:</label>
+            <input type="number" id="Xw2"><br><br>
+            <label for="Xk">X<sub>k</sub>:</label>
+            <input type="number" id="Xk"><br><br>
+            <input type="button" value="Process" onclick="callAll()">
+            <br><br>
+            <hr>
+            <h3>Distance to Forces</h3>
+            <label for="X1">X<sub>1</sub>:</label>
+            <input type="number" id="X1"><br><br>
+            <label for="X2">X<sub>2</sub>:</label>
+            <input type="number" id="X2"><br><br>
+            <br><br>
+            <hr>
+            <h3>Center of Gravity & Distance</h3>
+            <label for="Fcg">F<sub>cg</sub>:</label>
+            <input type="number" id="Fcg"><br><br>
+            <label for="Xcg">X<sub>cg</sub>:</label>
+            <input type="number" id="Xcg"><br><br>
+            <br><br>
+            <hr>
+            <h3>Reaction Forces</h3>
+            <label for="R1">R<sub>1</sub>:</label>
+            <input type="number" id="R1"><br><br>
+            <label for="R2">R<sub>2</sub>:</label>
+            <input type="number" id="R2"><br><br>
+            <hr>
+            <h3>Check for Pass</h3>
+            <h5 id="status"></h5>
+            <label for="Total">Total:</label>
+            <input type="number" id="Total"><br><br>
+        </form>
+        <div class="column"><img src="./img/Trailer.png"></div>
+    </div>
+
+    
+    <!-- your content here... -->
+    <!-- <script src="js/scripts.js"></script> -->
+    <script>
+
+        function callAll() {
+            findXw2();
+            distanceToForces();
+            cog();
+            reactionForce1();
+            reactionForce2();
+            check();
+            
+            
+        }
+
+        function findXw2(){
+            var Xoal = parseFloat(document.getElementById('Xoal').value);
+            var Xw1 = parseFloat(document.getElementById('Xw1').value);
+
+            document.getElementById('Xw2').value = (Xoal - Xw1);
+        }
+
+        function distanceToForces() {
+            // var F1 = document.getElementById('F1').value;
+            // var F2 = document.getElementById('F2').value;
+
+            var D1 = parseFloat(document.getElementById('D1').value);
+            var D2 = parseFloat(document.getElementById('D2').value);
+
+            var Xw1 = parseFloat(document.getElementById('Xw1').value);
+            var Xw2 = parseFloat(document.getElementById('Xw2').value);
+
+            document.getElementById('X1').value = (Xw1 - D1);
+            document.getElementById('X2').value = (Xw2 - D2);
+        }
+
+        //center of gravity
+        function cog() {
+            var F1 = parseFloat(document.getElementById('F1').value);
+            var F2 = parseFloat(document.getElementById('F2').value);
+            
+            document.getElementById('Fcg').value = (F1 + F2);
+
+            var X1 = parseFloat(document.getElementById('X1').value);
+            var X2 = parseFloat(document.getElementById('X2').value);
+
+            var num = (F1*X1) - (F2*X2);
+            var denom = (F1+F2);
+            document.getElementById('Xcg').value = (num/denom);
+
+        }
+
+        function reactionForce1(){
+            
+            var Fcg = parseFloat(document.getElementById('Fcg').value);
+            var Xk = parseFloat(document.getElementById('Xk').value);
+            var Xcg = parseFloat(document.getElementById('Xcg').value);
+
+            if(Xcg  >= 0){
+                document.getElementById('R1').value = (Fcg*Xcg)/Xk;
+            }
+            else{
+                document.getElementById('R1').value = (Fcg*Math.abs(Xcg))/Xk;
+            }  
+            
+        }
+
+        function reactionForce2(){
+            var Fcg = parseFloat(document.getElementById('Fcg').value);
+            var Xk = parseFloat(document.getElementById('Xk').value);
+            var Xcg = parseFloat(document.getElementById('Xcg').value);
+
+            if(Xcg  >= 0){
+                document.getElementById('R2').value = ((Xk-Xcg)*Fcg)/Xk;
+            }
+            else{
+                document.getElementById('R2').value = ((Xk-Math.abs(Xcg))*Fcg)/Xk;
+            }  
+
+        }
+
+        function check(){
+            var R1 = parseFloat(document.getElementById('R1').value);
+            var R2 = parseFloat(document.getElementById('R2').value);
+
+            document.getElementById('Total').value= R1+R2;
+            
+            if(R1+R2>0){
+                document.getElementById('status').innerHTML = "PASSED!";
+            }
+            else{
+                document.getElementById('status').innerHTML= "FAILED"
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
